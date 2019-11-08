@@ -11,13 +11,13 @@ interface State {
     todos: Todo[]
 }
 
-const style: React.CSSProperties = {
+const defaultStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
 }
 
 export default class TodoList extends Component<Props, State> {
-    state = {
+    state: State = {
         todos: [],
     }
 
@@ -31,14 +31,35 @@ export default class TodoList extends Component<Props, State> {
         }
     }
 
+    onComplete = (
+        index: number,
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const newTodos = [...this.state.todos]
+        newTodos[index].completed = !newTodos[index].completed
+        this.setState({ todos: newTodos })
+    }
+
     render() {
         return (
-            <div style={{ ...style, ...this.props.style }}>
+            <div
+                style={{
+                    ...defaultStyle,
+                    ...this.props.style,
+                }}
+            >
                 <h1>Todo List</h1>
                 {this.state.todos.map((todo, index) => (
-                    <TodoItem key={index} todo={todo} />
+                    <TodoItem
+                        key={index}
+                        todo={todo}
+                        onComplete={event => {
+                            this.onComplete(index, event)
+                        }}
+                    />
                 ))}
             </div>
+            // <h1>Hello World</h1>
         )
     }
 }
